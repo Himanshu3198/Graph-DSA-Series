@@ -1,80 +1,49 @@
-#include<iostream>
-#include<list>
-#define E endll;
+// simplest bfs implementation in cpp
+// time complexity O(E+V)
+#include <bits./stdc++.h>
+#define v 4
 using namespace std;
-class Graph{
 
-    int V;
-    list<int>*adj;
-
-     
-      
-    public:
-
-         Graph(int V);
-        void addEdge(int u,int v);
-
-        void BFS(int s);
-
-};
-
-  Graph::Graph(int V)
-  {
-      this->V=V;
-      adj=new list<int>[V];
-  }
-
- void  Graph:: addEdge(int u,int v)
-   {
-       adj[u].push_back(v);
-   }
-
-   void Graph::BFS(int s){
-
-       bool *visited =new bool[V];
-       for(int i=0;i<V;i++)
-         visited[i]=false;
-
-         list<int>queue;
-
-         visited[s]=true;
-         queue.push_back(s);
-
-          while(!queue.empty())
-          {
-
-              s=queue.front();
-              cout<<s<<" ";
-              queue.pop_front();
-
-              for(auto i:adj[s]){
-
-                  if(visited[i]==false)
-                  {
-                      visited[i]=true;
-                      queue.push_back(i);
-                  }
-
-              }
-          }
-        
-
-
-   }
-int main(){
-
-    Graph g(6);
-          g.addEdge(1,2);
-           g.addEdge(1,3);
-            g.addEdge(2,4);
-             g.addEdge(2,5);
-              g.addEdge(3,5);
-               g.addEdge(4,6);
-                g.addEdge(5,6);
-
-
-         g.BFS(1);
-         return 0;
-
-
+vector<int> adj[v];
+void addEdge(vector<int> adj[], int s, int d)
+{
+  adj[s].push_back(d);
 }
+
+void bfs(int x)
+{
+  vector<bool> visit = {false};
+
+  queue<int> q;
+  q.push(x);
+  visit[x] = true;
+
+  while (!q.empty())
+  {
+    int a = q.front();
+
+    cout << a << " ";
+    q.pop();
+    for (auto j = adj[a].begin(); j != adj[a].end(); j++)
+    {
+      if (!visit[*j])
+      {
+        visit[*j] = true;
+        q.push(*j);
+      }
+    }
+  }
+}
+
+int main()
+{
+
+  addEdge(adj, 0, 1);
+  addEdge(adj, 0, 2);
+  addEdge(adj, 1, 2);
+  addEdge(adj, 2, 0);
+  addEdge(adj, 2, 3);
+  addEdge(adj, 3, 3);
+  bfs(2);
+}
+// expected output 2 0 3 1
