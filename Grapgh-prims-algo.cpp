@@ -1,4 +1,4 @@
-//prim's algorithm
+//prim's algorithm using adjencey matrix
 //time complexity O(E^2)
 
 #include<bits/stdc++.h>
@@ -65,14 +65,14 @@ void findMST(int graph[V][V]){
 
 
 int main(){
-
+     // matrix representation of graph i.e graph[1][3]=1 means 1->3 wt 1
     int  graph[V][V]= { {0, 4, 6, 0, 0, 0},
 						{4, 0, 6, 3, 4, 0},
 						{6, 6, 0, 1, 8, 0},
 						{0, 3, 1, 0, 2, 3},
 						{0, 4, 8, 2, 0, 7},
 						{0, 0, 0, 3, 7, 0} };
-
+    // function call
     findMST(graph);
     return 0;                    
 }
