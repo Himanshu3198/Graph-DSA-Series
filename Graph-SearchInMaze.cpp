@@ -38,13 +38,7 @@ vector<string> solve(int m[4][4], int n)
     int sc = 0;
     vector<vector<int>> vis(MAX,vector<int>(MAX));
 
-    // for (int i = 0; i < n; i++)
-    // {
-    //     for (int j = 0; j < n; j++)
-    //     {
-    //         vis[i][j] = 0;
-    //     }
-    // }
+
 
     dfs(m, sr, sc, n, n, ans, vis);
 
