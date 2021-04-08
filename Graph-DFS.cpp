@@ -1,49 +1,43 @@
-#include<bits/stdc++.h>
-#define E endl;
+#include <bits/stdc++.h>
+#define V 4;
 using namespace std;
-class Graph{
-    int V;
-    list<int> *adj;
-    void DFSUtil(int v,bool visited[]);
-    public:
-    Graph(int V);
-    void addEdge(int v,int w);
-    void DFS(int v);
 
-};
-Graph::Graph(int V){
-    this->V=V;
-    adj=new list<int>[V];
+vector<int>adj[4];
+
+void addEdge(vector<int> adj[], int s, int d)
+{
+  adj[s].push_back(d);
 }
-void Graph::addEdge(int v,int w){
-    adj[v].push_back(w);
-}
-void Graph::DFSUtil(int v,bool visited[]){
-    visited[v]=true;
-    cout<<v<<" ";
-    list<int>::iterator i;
-    for(i=adj[v].begin();i!=adj[v].end();i++){
-        if(!visited[*i])
-        DFSUtil(*i,visited);
+
+void solve(int v,bool visited[]){
+  visited[v]=true;
+  cout<<v<<" ";
+  for(auto it=adj[v].begin();it!=adj[v].end();it++){
+    if(!visited[*it]){
+      solve(*it,visited);
     }
-
+  }
 }
-void Graph::DFS(int v){
-    bool *visted=new bool[V];
-    for(int i=0;i<v;i++)
-     visted[i]=false;
+void dfs(int v){
+   bool *visited=new bool[4];
+    for(int i=0;i<4;i++)
+     visited[i]=false;
 
-     DFSUtil(v,visted);
+    solve(v,visited);
 }
-int main(){
-    Graph g(4);
-    g.addEdge(0,1);
-    g.addEdge(0,2);
-    g.addEdge(1,2);
-    g.addEdge(2,0);
-    g.addEdge(2,3);
-    g.addEdge(3,3);
-    cout<<"DFS OF GRAPH WOULD BE:  ";
-    g.DFS(2);
-    return 0;
+
+
+
+
+int main()
+{
+  addEdge(adj, 0, 1);
+  addEdge(adj, 0, 2);
+  addEdge(adj, 1, 2);
+  addEdge(adj, 2, 0);
+  addEdge(adj, 2, 3);
+  addEdge(adj, 3, 3);
+  dfs(2);
+
+  return 0;
 }
