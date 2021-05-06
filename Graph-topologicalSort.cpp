@@ -1,7 +1,16 @@
+
+/* 
+    Topological sort in graph
+    first make vector for record degree of vertex and obviously there must be 
+
+    one vertex whose degree is  equal to zero  now make a queue and push vertex with zero degree  
+
+	now apply bfs on it pop the front vertex and  print it  then  decrease the  count of degree at current vertex while traversing neighbour 
+
+	 vertex now if degree become  zero on particular vertex push it into the queue.    */
 #include <bits/stdc++.h>
 using namespace std;
 
- // } Driver Code Ends
 class Solution{
 	public:
 	vector<int> topoSort(int V, vector<int> adj[]) {
@@ -18,6 +27,14 @@ class Solution{
 	            in[x]++;
 	        }
 	    }
+
+		for(int i=0;i<V;i++){
+
+			cout<<in[i]<<" ";
+		}
+		cout<<"\n";
+
+
 	    
 	   for(int i=0;i<V;i++){
 	       if(in[i]==0){
@@ -43,26 +60,7 @@ class Solution{
 	}
 };
 
-// { Driver Code Starts.
 
-/*  Function to check if elements returned by user
-*   contains the elements in topological sorted form
-*   V: number of vertices
-*   *res: array containing elements in topological sorted form
-*   adj[]: graph input
-*/
-int check(int V, vector <int> &res, vector<int> adj[]) {
-    vector<int> map(V, -1);
-    for (int i = 0; i < V; i++) {
-        map[res[i]] = i;
-    }
-    for (int i = 0; i < V; i++) {
-        for (int v : adj[i]) {
-            if (map[i] > map[v]) return 0;
-        }
-    }
-    return 1;
-}
 
 int main() {
     int T;
@@ -82,8 +80,26 @@ int main() {
         Solution obj;
         vector <int> res = obj.topoSort(N, adj);
 
-        cout << check(N, res, adj) << endl;
+
+		for(auto it:res){
+
+			cout<<it<<" ";
+		}
+		cout<<"\n";
+
+       
     }
     
     return 0;
-}  // } Driver Code Ends
+}  
+
+// 1
+// 6 6
+// 5 0
+// 4 0
+// 5 2
+// 4 1
+// 2 3
+// 3 1
+//               degree  2 2 1 1 0 0
+// 4 5 0 2 3 1
