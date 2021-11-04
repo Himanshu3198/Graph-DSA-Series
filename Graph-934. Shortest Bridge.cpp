@@ -2,43 +2,60 @@
 
 class Solution {
 public:
-    
-      
-    int dfs(vector<vector<int>>&grid,int i,int j,int n,int m){
+      queue<pair<int,pair<int,int>>>q;
+      void dfs1(vector<vector<int>>&grid,int i,int j,int n,int m){
+          if(i<0 or i>=n or j<0 or j>=m or grid[i][j]!=1){
+            return;
+        }
+          
+          grid[i][j]=2;
+          q.push({0,{i,j}});
+          
+          dfs1(grid,i+1,j,n,m);
+           dfs1(grid,i-1,j,n,m);
+           dfs1(grid,i,j+1,n,m);
+           dfs1(grid,i,j-1,n,m);
+            
+          
+      }
+        int dfs2(vector<vector<int>>&grid,int i,int j,int n,int m){
         
-        if(i<0 or i>=n or j<0 or j>=m or grid[i][j]!=0){
+        if(i<0 or i>=n or j<0 or j>=m ){
             return 0;
         }
          return 1;
       
     }
+ 
     int shortestBridge(vector<vector<int>>& grid) {
         
         int n=grid.size();
         int m=grid[0].size();
         
         
-         queue<pair<int,int>>q;
         
-        int zeros=0;
-        
+          bool flag=false;
         for(int i=0;i<n;i++){
             
             for(int j=0;j<m;j++){
                 
                 if(grid[i][j]==1){
-                    
-                    q.push({i,j});
-                    
+                    dfs1(grid,i,j,n,m);
+                    q.push({0,{i,j}});
+                    flag=true;
+                    break;
                     
                 }
-                else{
-                    zeros++;
-                }
+                
+            }
+           if (flag){
+                break;
             }
         }
         
-          int level=0;
+           int dx[4]={1,-1,0,0};
+        
+           int dy[4]={0,0,1,-1};
         while(!q.empty()){
             
             
@@ -47,49 +64,42 @@ public:
             
             while(size--){
                 
-                
-                int i=q.front().first;
-                int j=q.front().second;
+                int level=q.front().first;
+                int i=q.front().second.first;
+                int j=q.front().second.second;
                   q.pop();
                 
-              
-                   if(dfs(grid,i+1,j,n,m)){
-                 grid[i+1][j]=1;
-                 q.push({i+1,j});
-                 zeros--;
-            }
-             if(dfs(grid,i-1,j,n,m)){
-                 grid[i-1][j]=1;
-                 q.push({i-1,j});
-                 zeros--;
-            }
-             if(dfs(grid,i,j-1,n,m)){
-                 grid[i][j-1]=1;
-                 q.push({i,j-1});
-                 zeros--;
-            }
-             if(dfs(grid,i,j+1,n,m)){
-                 grid[i][j+1]=1;
-                 q.push({i,j+1});
-                 zeros--;
-            }
                 
                 
-            }
-              level++;
-            
-            cout<<zeros<<"zeros\n";
-             if(zeros<=0){
+                for(int k=0;k<4;k++){
                     
-                    return level;
+                    if(dfs2(grid,i+dx[k],j+dy[k],n,m)==1){
+                         
+                        if(grid[i+dx[k]][j+dy[k]]==0){
+                            
+                            grid[i+dx[k]][j+dy[k]]=2;
+                            q.push({level+1,{i+dx[k],j+dy[k]}});
+                        }
+                        
+                        else if(grid[i+dx[k]][j+dy[k]]==1){
+                              return level;
+                        }
+                    }
+                    
+                    
                 }
+                
+                
+
+            }
             
-          
-        }
+                
+                
+            }
+           
+    
         
-        
-        
-        return level;
+        return -1;
         
         
     }
