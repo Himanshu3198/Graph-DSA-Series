@@ -1,97 +1,158 @@
 310. Minimum Height Trees
 
-class Solution {
-public:
+
+
     
     /* the idea is to use khan's algorithm (topological sort) in this question 
-     two nodes may have same height else rest of have one basically  we have two 
-     find the indgree of all nodes  if nodes having indgree 1 then they the are not
-     contributing anything two deteriming the height so we removed it and also
-     decresee  their count from their children after all the proess we will only 
-     left with one or two nodes that would be our answer
+       we need to find the minimum height of the tree  or a  node  which have a minimum distance from that node 
+        to any node, so there can be one node if no's of nodes are odd otherwise if even nodes then there can be
+        two which have the same minimum distance to all nodes and for the   optimal approach   we will use topological sorting
+         two find that nodes 
      */ 
-    vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges) {
+
      
+
+
+//   bruteforce  
+class Solution {
+public:
+    vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges) {
         
-         vector<int>indeg(n,0);
-        vector<vector<int>>adj(n);
-        vector<int>res;
+        
+              // vector<int>indgree(n,0);
+        
+             vector<int>adj[n];
+        
+           for(int i=0;i<edges.size();i++){
+               
+               
+                 adj[edges[i][0]].push_back(edges[i][1]);
+                adj[edges[i][1]].push_back(edges[i][0]);
+           }
         
         
-        for(auto it:edges){
-            
-            adj[it[0]].push_back(it[1]);
-            adj[it[1]].push_back(it[0]);
-            
-            indeg[it[0]]++;
-            
-            indeg[it[1]]++;
-        }
+           queue<int>q;
+        
+           int min_height=INT_MAX;
+        
+        
+           vector<int>res(n);
+        
+        
+          for(int i=0;i<n;i++){
+              
+              
+              q.push(i);
+               int curr_hei=0;
+                vector<int>vis(n,0);
+                  vis[i]=1;
+              while(!q.empty()){
+                  
+                  int size=q.size();
+                  curr_hei++;
+                  
+                 
+                  while(size--){
+                      
+                      
+                      int top=q.front();
+                        q.pop();
+                         vis[top]=1;
+                       for(auto it:adj[top]){
+                           
+                           if(!vis[it]){
+                               q.push(it);
+                           }
+                       }
+                  }
+                  
+              }
+              
+              min_height=min(min_height,curr_hei-1);
+              res[i]=curr_hei-1;
+          }
+        
+             for(auto it:res) cout<<it<<" ";
+        
+          vector<int>ans;
+         for(int i=0;i<n;i++){
+             
+             if(res[i]==min_height){
+                 ans.push_back(i);
+             }
+         }
+        
+        return ans;
+        
+                
+    }
+};
+ // optimal o(n)
+class Solution {
+public:
+    vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges) {
+        
+        
+                  if(n==1) return {0};        
+          
+        
+             vector<int>adj[n];
+              vector<int>indgree(n,0);
+           for(int i=0;i<edges.size();i++){
+               
+               
+                 adj[edges[i][0]].push_back(edges[i][1]);
+                adj[edges[i][1]].push_back(edges[i][0]);
+               
+                indgree[edges[i][0]]++;
+                indgree[edges[i][1]]++;
+           }
+        
+        
+           queue<int>q;
+        
+           for(int i=0;i<n;i++){
+               
+               if(indgree[i]==1){
+                   q.push(i);
+               }
+           }
+        
+        
+            vector<int>res;
+        
+           while(!q.empty()){
+               
+               
+                    int size=q.size();
+                    vector<int>temp;
+                  
+                   while(size--){
+                       
+                       
+                       int curr=q.front();
+                       
+                          q.pop();
+                        temp.push_back(curr);
+                       
+                       for(auto it:adj[curr]){
+                           
+                           indgree[it]--;
+                           if(indgree[it]==1){
+                               q.push(it);
+                           }
+                       }
+                   }
+               
+                   res=temp;
+           }
+        
+        
+        return res;
            
         
         
-        if(n==1){
-            return {0};
-        }
-        if(n==2){
-            
-            res.push_back(edges[0][0]);
-            res.push_back(edges[0][1]);
-            
-            return res;
-        }
-        
-      
-        
-        
-        for(auto it:indeg){
-            cout<<it<<" ";
-        }
-        
-        
-        
-        queue<int>q;
-        
-        for(int i=0;i<n;i++){
-            
-             if(indeg[i]==1){
-                 q.push(i);
-                 indeg[i]--;
-             }
-        }
-        
-        
-        
-        while(!q.empty()){
-            
-            
-            int size=q.size();
-            res.clear();
-            
-            while(size--){
+       
                 
-                int cur=q.front();
-                
-                res.push_back(cur);
-                q.pop();
-                
-            
-                for(auto it:adj[cur]){
-                    
-                    indeg[it]--;
-                    
-                    if(indeg[it]==1){
-                       
-                        q.push(it);
-                    }
-                    
-                }
-            }
-        }
-        
-        return res;
-        
-        
-        
     }
 };
