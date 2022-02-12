@@ -1,17 +1,13 @@
-//time complexity O(n2*m) where m is no of words
-// 127. Word Ladder
-
-#include<bits/stdc++.h>
-using namespace std;
-
-int find_transform( vector<string>&wordList,string beginWord,string endWord){
-             unordered_set<string> myset;
+class Solution {
+public:
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+            unordered_set<string> myset;
         bool isPresent = false; //Checks if endWord is present in Dict
         //Insert all words from Dict in myset
         for(auto word: wordList)
         {   
               // may be endword not present in wordlist so we just return 0
-            if(endWord.compare(word)==0)
+            if(endWord==word)
                 isPresent = true;
             myset.insert(word);    //Insert word in Dict
         }
@@ -51,15 +47,5 @@ int find_transform( vector<string>&wordList,string beginWord,string endWord){
             }
         }
         return 0;
-}
-
-int main(){
-
-
-
-    vector<string>vec={"hot","dot","dog","lot","log","cog"};
-    string start_word="hit";
-    string end_word="cog";
-
-    cout<<find_transform(vec,start_word,end_word)<<"\n";
-}
+    }
+};
