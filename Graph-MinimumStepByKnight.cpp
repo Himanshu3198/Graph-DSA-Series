@@ -12,56 +12,48 @@ class Solution {
 public:
 
      
-    bool valid(int x, int y, int n){
-    if(x>=0 && x<n && y>=0 && y<n)return true;
-    else return false;
-    }
-	int minStepToReachTarget(vector<int>&KnightPos, vector<int>&TargetPos, int N){
-	    // Code here
-	    
-	      int x1=KnightPos[0];
-	      int y1=KnightPos[1];
-	      
-	      int x2=TargetPos[0];
-	      int y2=TargetPos[1];
-	    
-          int xcord[] = {2,1,-1,-2};
-    int ycord[] = {1,2,2,1};
-    
-    vector< vector<int> > board(N, vector<int>(N, -1) );
-    queue< pair<int,int> >  q;
-    
-    q.push(make_pair(x1-1,y1-1));
-    board[x1-1][y1-1] ++;
-    while(!q.empty()){
-        int x = q.front().first;
-        int y = q.front().second;
-        q.pop();
-        
-        if(x==(x2-1) && y == (y2-1) ){
-            return board[x][y];
-        }
-        
-        for(int i=0; i<4; i++){
-            int xnew = x + xcord[i];
-            int ynew = y + ycord[i];
-            if(valid(xnew, ynew, N) && board[xnew][ynew]==-1){
-                board[xnew][ynew] = board[x][y] + 1;
-                q.push(make_pair(xnew, ynew));
-            }
-            
-            ynew = y - ycord[i];
-            if(valid(xnew, ynew,N) && board[xnew][ynew]==-1){
-                board[xnew][ynew] = board[x][y] + 1;
-                q.push(make_pair(xnew, ynew));
-            }
-        }
-        
-    }
-    return -1;
-	    
-	    
+       int dx[8]={2,2,-2,-2,1,1,-1,-1};
+       int dy[8]={1,-1,1,-1,2,-2,2,-2};
+       bool isValid(int i,int j,int n,int m){
+           if(i>=0 and j>=0 and i<n and j<m){
+               return true;
+           }
+           return false;
+       }
+	int minStepToReachTarget(vector<int>&KnightPos,vector<int>&TargetPos,int N)
+	{
+	      int level=0;
+	       queue<pair<int,int>>q;
+	       vector<vector<int>>vis(N+1,vector<int>(N+1,0));
+	       q.push({KnightPos[0],KnightPos[1]});
+	        vis[KnightPos[0]][KnightPos[1]]=1;
+	       while(!q.empty()){
+	           
+	           int size=q.size();
+	           while(size--){
+	                int i=q.front().first;
+	                int j=q.front().second;
+	                    q.pop();
+	               for(int k=0;k<8;k++){
+	                    int x=i+dx[k];
+	                    int y=j+dy[k];
+	                    if(x==TargetPos[0] and  y==TargetPos[1]) return level+1;
+	                    if(isValid(x,y,N,N)==1){
+	                        if(vis[x][y]==0){
+	                             vis[x][y]=1;
+	                            q.push({x,y});
+	                        }
+	                       
+	                    }
+	               }
+	               
+	           }
+	               level++;
+	       }
+	       
+	       return 0;
 	}
+	
 };
 
 
