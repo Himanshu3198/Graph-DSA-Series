@@ -6,41 +6,55 @@ void addEdge(vector<int>adj[],int s,int d){
     adj[s].push_back(d);
 }
 
-
-unordered_map<int,int> white,gray,black;
-
-
-int flag=0;
-void dfs(int u, vector<int> adj[])
-{
-    gray[u]=1;
-    int i,j;
-    for(i=0;i<adj[u].size();i++)
-    {
-       if(black[adj[u][i]])continue;
-       if(gray[adj[u][i]]){flag=1;}
-       else
-       dfs(adj[u][i],adj);
-    }
-    black[u]=1;
-    gray[u]=0;
-}
-bool isCyclic()
-{
-
-    flag=0;
-    for(int i=0;i<V;i++)
-    {
-        if(gray[i]==0)
-        {
-            dfs(i,adj);
+    bool isCyclic(int V, vector<int> adj[]) {
+        // code here
+        
+        // approach is to use topological sort because we graph have cycle  
+        //  then then indegree of of all nodes will not be zeros
+        
+        
+        vector<int>indegree(V,0);
+        
+        
+        for(int i=0;i<V;i++){
+            
+            for(auto it:adj[i]){
+                
+                indegree[it]++;
+            }
         }
+        
+         queue<int>q;
+        for(int i=0;i<V;i++){
+            
+            if(indegree[i]==0){
+                q.push(i);
+            }
+        }
+        
+        int count=0;
+        
+        
+        while(!q.empty()){
+            
+            auto curr=q.front(); q.pop();
+            count++;
+            
+            for(auto &it:adj[curr]){
+                indegree[it]--;
+                
+                if(indegree[it]==0)q.push(it);
+                
+            }
+        }
+        
+        
+        
+        return  count!=V;
+        
+        
+        
     }
-    gray.clear();
-    black.clear();
-    return flag;
-}
-
 
 
 int main() {
