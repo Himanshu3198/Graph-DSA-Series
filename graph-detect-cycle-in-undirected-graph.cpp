@@ -42,7 +42,6 @@ bool isCyclic(vector<int>adj[],vector<int>visit,int curr,int V){
 	            }
 	        }
 	        
-	        visit[i]=0;
 	    }
 	    
 	    return false;
