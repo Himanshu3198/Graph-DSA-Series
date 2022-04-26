@@ -2,6 +2,7 @@
 /* Kruskal's Algo
    step 1 sort the edges by increasing order of their weight 
    step 2 use dsu to check if  curr edges making cycle or not if not then include its weight in minimum spanning tree cost
+   t.c O(ElogE)+O(E*4*alpha)
 */
 #include<bits/stdc++.h>
 using namespace std;
