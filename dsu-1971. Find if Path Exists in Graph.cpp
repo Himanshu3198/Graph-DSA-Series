@@ -147,3 +147,39 @@ public:
         return find(start)==find(end);
     }
 };
+class Solution {
+public:
+    vector<int>parent,rank;
+    int find(int x){
+        if(parent[x]==x) return x;
+        return parent[x]=find(parent[x]);
+    }
+    void union_op(int x,int y){
+        if(x==y)return;
+        if(rank[x]>=rank[y]){
+            parent[y]=x;
+            rank[x]+=rank[y];
+        }else{
+            parent[x]=y;
+            rank[y]+=rank[x];
+        }
+    }
+    bool validPath(int n, vector<vector<int>>& edges, int source, int destination) {
+        
+                 parent.resize(n);
+                 rank.resize(n); 
+                 for(int i=0;i<n;i++) parent[i]=i;
+                 for(int i=0;i<n;i++) rank[i]=1;
+                 
+                 for(auto &it:edges){
+                     union_op(find(it[0]),find(it[1]));
+                 }
+                 // cout<<parent[source]<<" "<<parent[destination]<<"\n";
+                 int x=find(source);
+                 int y=find(destination);
+                cout<<parent[x]<<" "<<parent[y]<<"\n\n";
+                return parent[x]==parent[y];
+               
+         
+    }
+};
