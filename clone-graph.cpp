@@ -1,66 +1,40 @@
 /*
 // Definition for a Node.
 class Node {
-public:
-    int val;
-    vector<Node*> neighbors;
-    Node() {
+    public int val;
+    public List<Node> neighbors;
+    public Node() {
         val = 0;
-        neighbors = vector<Node*>();
+        neighbors = new ArrayList<Node>();
     }
-    Node(int _val) {
+    public Node(int _val) {
         val = _val;
-        neighbors = vector<Node*>();
+        neighbors = new ArrayList<Node>();
     }
-    Node(int _val, vector<Node*> _neighbors) {
+    public Node(int _val, ArrayList<Node> _neighbors) {
         val = _val;
         neighbors = _neighbors;
     }
-};
+}
 */
 
 class Solution {
-public:
-    
-    void dfs(Node *curr,Node *node,vector<Node*>&visit){
-        visit[node->val]=node;
-        for(auto ele:curr->neighbors){
-            if(visit[ele->val]==NULL){
-                Node *newnode=new Node(ele->val);
-                node->neighbors.push_back(newnode);
-                dfs(ele,newnode,visit);
-            }
-            else{
-                 node->neighbors.push_back(visit[ele->val]); 
-            }
-          
-            
-            
-        }
+
+    private Node dfs(Node node,Node[]visited){
+       if(visited[node.val]!=null) return visited[node.val];
+       Node cloneNode = new Node(node.val);
+       visited[cloneNode.val]=cloneNode;
+
+       for(Node ngr:node.neighbors){
+           cloneNode.neighbors.add(dfs(ngr,visited));
+       }
+       return cloneNode;
     }
-    Node* cloneGraph(Node* node) {
+    public Node cloneGraph(Node node) {
         
-        if(node==NULL){
-            return NULL ;
-        }
-           vector<Node*>visit (1000,NULL);
-        
-        Node *copy=new Node(node->val);
-         visit[node->val]=copy;
-        
-        for(auto nodefriend:node->neighbors){
-            if(visit[nodefriend->val]==NULL){
-            
-                  Node *newnode=new Node(nodefriend->val);
-                copy->neighbors.push_back(newnode);
-                dfs(nodefriend,newnode,visit);
-            }
-            else{
-                copy->neighbors.push_back(visit[nodefriend->val]);   
-            }
-        }
-        
-        return copy;
-        
+       if(node == null) return null;
+       Node[] visited = new Node[101];
+       return dfs(node,visited);
+
     }
-};
+}
