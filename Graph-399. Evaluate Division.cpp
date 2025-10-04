@@ -1,74 +1,69 @@
-// 399. Evaluate Division
-
 class Solution {
-public:
-    
-    
-     void dfs(string s,string d,map<string,vector<pair<string,double>>>mp, set<string>&visit,double &ans,double temp){
-         
-         if(visit.find(s)!=visit.end()==true){
-             
-             return;
-         }
-         else{
-             
-             
-             
-             visit.insert(s);
-             
-             if(s==d){
-                 ans=temp;
-                 return;
-             }
-             else{
-                 
-                   for(auto it:mp[s]){
-                 
-                 dfs(it.first,d,mp,visit,ans,temp*it.second);
-             }
-                 
-             }
-             
-           
-         }
-         
-     
-     }
-    vector<double> calcEquation(vector<vector<string>>& eq, vector<double>& val, vector<vector<string>>& que) {
+    public double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
+
+        int n = equations.size(), idx = 0;
+        Map<String,List<Pair>> graph = new HashMap<>();
         
-        
-        
-        map<string,vector<pair<string,double>>>mp;
-        
-        int i=0;
-        for(int i=0;i<eq.size();i++){
-            
-            mp[eq[i][0]].push_back({eq[i][1],val[i]});
-           mp[eq[i][1]].push_back({eq[i][0],1/val[i]});
-            
-       
+        for(List<String> equation:equations){
+
+            String u = equation.get(0);
+            String v = equation.get(1);
+            double val = values[idx++];
+
+            graph.putIfAbsent(u,new ArrayList<>());
+            graph.get(u).add(new Pair(v,val));
+            graph.putIfAbsent(v,new ArrayList<>());
+            graph.get(v).add(new Pair(u,1.0/val));
+
         }
-        
-        vector<double>res;
-        double ans;
-        
-       
-        
-        for(auto it:que){
-            
-             set<string>visit;
-               ans=-1.0;
-            
-             string s=it[0];
-            string d=it[1];
-            if(mp.find(s)!=mp.end())
-                dfs(s,d,mp,visit,ans,1.0);
-                
-            res.push_back(ans);
-            
+
+        double [] res = new double [queries.size()];
+
+        for(int i=0;i<queries.size();i++){
+
+            String s = queries.get(i).get(0);
+            String d = queries.get(i).get(1);
+
+            if (!graph.containsKey(s) || !graph.containsKey(d)) {
+                res[i] = -1.0;
+                continue;
+            }
+
+            Set<String> visited = new HashSet<>();
+            double ans = dfs(graph,visited,s,d,1.0);
+            res[i] = ans;
+
         }
         
         return res;
-        
     }
-};
+
+    private double dfs(Map<String,List<Pair>>graph, Set<String> visited, String s, String d, double product){
+
+        visited.add(s);
+
+        if(s.equals(d)){
+            return product;
+        }
+
+        for(var ngbr: graph.getOrDefault(s,Collections.emptyList())){
+            if(!visited.contains(ngbr.eq)){
+               double ans = dfs(graph,visited,ngbr.eq,d,product*ngbr.val);
+               if(ans != -1.0) return ans;
+            }
+        }
+
+        return -1.0;
+    }
+}
+
+class Pair{
+
+    String eq;
+    double val;
+
+    public Pair(String eq,double val){
+        this.eq = eq;
+        this.val = val;
+    }
+}
