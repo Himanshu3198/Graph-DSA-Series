@@ -156,3 +156,67 @@ public:
                 
     }
 };
+
+
+
+/*** java solution*****/
+
+/*
+the idea is to find the minHeight of tree while making each  node as tree so if we making each node as root then it will take lot a time to find the height . optimal approch is node with most outward child nodes will be having minheight so we can use topological sort to find out node with max indegree . just resolve the dependency with minimum indegree = 1 
+*/
+class Solution {
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        
+        if(n == 1) return List.of(0);
+
+         Map<Integer,List<Integer>> graph = new HashMap<>();
+         int [] indegree = new int[n];
+
+         Arrays.fill(indegree,0);
+
+         for(int [] edge:edges){
+
+            int u = edge[0];
+            int v = edge[1];
+
+            graph.putIfAbsent(u,new ArrayList<>());
+            graph.putIfAbsent(v,new ArrayList<>());
+            graph.get(u).add(v);
+            graph.get(v).add(u);
+            indegree[u]++;
+            indegree[v]++;
+
+         }
+
+         Queue<Integer> q = new LinkedList<>();
+
+         for(int i=0;i<n;i++){
+            if(indegree[i] ==  1) q.offer(i);
+         }
+
+         List<Integer> result = new ArrayList<>();
+
+         while(!q.isEmpty()){
+
+            int size = q.size();
+            List<Integer> minHeight = new ArrayList<>();
+
+            for(int i=0;i<size;i++){
+
+                int  node  = q.poll();
+                minHeight.add(node);
+
+                for(var ngbr:graph.get(node)){
+                      indegree[ngbr]--;
+                      if(indegree[ngbr] == 1){
+                        q.offer(ngbr);
+                      }
+                }
+            }
+
+            result = minHeight;
+         }
+
+         return result;
+    }
+}
