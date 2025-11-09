@@ -49,3 +49,65 @@ public:
         
     }
 };
+
+// java implementation 
+
+class Solution {
+
+    private boolean isValid(int x,int y,int n, int m){
+
+        return x>=0 && y>=0 && x<n && y<m;
+    }
+    public int minimumEffortPath(int[][] heights) {
+        
+        int m = heights[0].length;
+        int n = heights.length;
+        int [] dx = {0,1,-1,0};
+        int [] dy = {1,0,0,-1};
+        
+        int dist[][] = new int[n][m];
+        for(int i=0;i<n;i++){
+            Arrays.fill(dist[i],Integer.MAX_VALUE);
+        }
+        PriorityQueue<Pair> pq = new PriorityQueue<>(Comparator.comparingInt(p -> p.distance));
+        pq.add(new Pair(0,0,0));
+        dist[0][0] = 0;
+
+        while(!pq.isEmpty()){
+
+            Pair top = pq.poll();
+            int x = top.u;
+            int y = top.v;
+            int w = top.distance;
+
+            if(x == n-1 && y == m-1) return w;
+
+            for(int k=0;k<4;k++){
+                int newX = dx[k]+x;
+                int newY = dy[k]+y;
+
+                if(!isValid(newX,newY,n,m)) continue;
+
+                int currDist = Math.max(w,Math.abs(heights[x][y]-heights[newX][newY]));
+                if(currDist <dist[newX][newY]){
+                    pq.add(new Pair(newX,newY,currDist));
+                    dist[newX][newY] = currDist;
+                }
+            }
+        }
+
+         return 0;
+    }
+}
+
+class Pair{
+    int u;
+    int v;
+    int distance;
+
+    public Pair(int u,int v,int distance){
+        this.u = u;
+        this.v = v;
+        this.distance = distance;
+    }
+}
