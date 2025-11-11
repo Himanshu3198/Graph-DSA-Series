@@ -54,3 +54,44 @@ public:
         return cnt;
     }
 };
+
+// python code 
+class Solution:
+    def find_parent(self,parent: List[int],x: int)->int:
+        if x == parent[x]:
+            return x
+        parent[x] = self.find_parent(parent,parent[x])
+        return parent[x]
+    def union_op(self,parent:List[int],rank: List[int],x: int,y: int)->None:
+        u = self.find_parent(parent,x)
+        v = self.find_parent(parent,y)
+        if u == v:
+            return
+        if rank[u]>rank[v]:
+            parent[v] = u
+        elif rank[v]>rank[u] :
+            parent[u] = v
+        else :
+            parent[v] = u
+            rank[u]  = rank[u] + 1
+
+
+    def findCircleNum(self, isConnected: List[List[int]]) -> int:
+        n = len(isConnected)
+        parent = [ i for i in range(0,n)]
+        rank = [0]*n
+
+        for i in range(0,n):
+            for j in range(1,n):
+
+                if isConnected[i][j] == 1:
+                    self.union_op(parent,rank,i,j)
+        
+        ans = set()
+
+        for x in parent:
+            ans.add(self.find_parent(parent,x))
+        return len(ans)
+
+    
+        
