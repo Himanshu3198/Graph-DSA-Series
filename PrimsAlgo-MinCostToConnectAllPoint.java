@@ -40,3 +40,30 @@ class Pair{
         this.x = x;
     }
 }
+
+// python code
+
+
+import heapq
+class Solution:
+    def minCostConnectPoints(self, points: List[List[int]]) -> int:
+        n = len(points)
+        visited = [0 for _ in range(0,n)]
+        min_heap = [(0,0)]
+        total_cost = 0;
+
+        while len(min_heap) > 0 :
+            distance,i = heapq.heappop(min_heap);
+            if visited[i] == 1 :
+                continue;
+            total_cost = total_cost + distance
+            visited[i] = 1
+
+            for j in range(0,n):
+                if visited[j] == 1:
+                    continue
+                dist = abs(points[i][0]-points[j][0]) + abs(points[i][1]-points[j][1])
+                heapq.heappush(min_heap,(dist,j))
+        
+        return total_cost
+        
