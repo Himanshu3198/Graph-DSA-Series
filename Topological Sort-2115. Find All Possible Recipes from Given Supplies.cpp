@@ -105,3 +105,49 @@ public:
          
     }
 };
+
+// java code-
+class Solution {
+    public List<String> findAllRecipes(String[] recipes, List<List<String>> ingredients, String[] supplies) {
+                 
+                // treat ingredients as graph node ingredient->recipes  and consider supplies  indegree with zero 
+                // rest just do topological sort 
+                 int  n = recipes.length;
+                 Map<String,List<String>>graph = new HashMap<>();
+                 Map<String,Integer>indegree = new HashMap<>();
+                 for(String recipe:recipes){
+                    indegree.put(recipe,0);
+                 }
+
+                 for(int i=0;i<n;i++){
+                    for(String ingredient:ingredients.get(i)){
+                        graph.computeIfAbsent(ingredient,k->new ArrayList<>()).add(recipes[i]);
+                        if(indegree.containsKey(recipes[i])){
+                            indegree.put(recipes[i],indegree.get(recipes[i])+1);
+                        }
+                    }
+                 }
+                 Queue<String> q = new LinkedList<>();
+                 for(String supply:supplies){
+                    q.offer(supply);
+                 }
+
+                 List<String> res = new ArrayList<>();
+                 while(!q.isEmpty()){
+                    String curr = q.poll();
+                    if(indegree.containsKey(curr)){
+                        res.add(curr);
+                    }
+                    for(String ngbr:graph.getOrDefault(curr,new ArrayList<>())){
+                        if(indegree.containsKey(ngbr)){
+                            indegree.put(ngbr,indegree.get(ngbr)-1);
+                        }
+                        if(indegree.get(ngbr) == 0){
+                            q.offer(ngbr);
+                        }
+                    }
+                 }
+
+                 return res;
+    }
+}
